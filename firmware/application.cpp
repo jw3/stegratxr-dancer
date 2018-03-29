@@ -66,6 +66,8 @@ int tinkerDigitalWrite(String command) {
     else return -2;
 
     if(command.startsWith("D")) {
+        pinMode(pinNumber, OUTPUT);
+        digitalWrite(pinNumber, value);
         return 1;
     }
     else if(command.startsWith("A")) {
@@ -89,6 +91,7 @@ int tinkerAnalogWrite(String command) {
         return 1;
     }
     else if(command.startsWith("A")) {
+        delayms = value.toInt();
         return 1;
     }
     else return -2;
