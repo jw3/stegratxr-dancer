@@ -17,7 +17,8 @@
   ******************************************************************************
  */
 
-#include "application.h"
+#include <application.h>
+#include <Sequences.hpp>
 
 int tinkerDigitalRead(String pin);
 int tinkerDigitalWrite(String command);
@@ -26,19 +27,22 @@ int tinkerAnalogWrite(String command);
 
 
 void setup() {
+    pinMode(D0, OUTPUT);
+    pinMode(D1, OUTPUT);
+    pinMode(D2, OUTPUT);
+    pinMode(D3, OUTPUT);
+    pinMode(D7, OUTPUT);
+
     Particle.function("digitalread", tinkerDigitalRead);
     Particle.function("digitalwrite", tinkerDigitalWrite);
     Particle.function("analogread", tinkerAnalogRead);
     Particle.function("analogwrite", tinkerAnalogWrite);
 }
 
-int delayms = 1000;
+SequencePtr seq = std::make_shared<InlineFour>();
 
 void loop() {
-    digitalWrite(D7, HIGH);
-    delay(delayms);
-    digitalWrite(D7, LOW);
-    delay(delayms);
+    seq->step();
 }
 
 int tinkerDigitalRead(String pin) {
@@ -76,8 +80,7 @@ int tinkerDigitalWrite(String command) {
     else return -3;
 }
 
-int tinkerAnalogRead(String pin)
-{
+int tinkerAnalogRead(String pin) {
     return 0;
 }
 
@@ -91,7 +94,7 @@ int tinkerAnalogWrite(String command) {
         return 1;
     }
     else if(command.startsWith("A")) {
-        delayms = value.toInt();
+        if(seq) seq->delays(value.toInt());
         return 1;
     }
     else return -2;
