@@ -48,13 +48,13 @@ function(add_particle_remote_app name)
     add_custom_target(${name} ALL
                       DEPENDS ${OUTPUT_PREFIX}/${name}.bin)
 
-    file(GLOB SOURCE_FILES ${APP_DIR}/*.cpp)
+    file(GLOB SOURCE_FILES ${APP_DIR}/*.cpp ${APP_DIR}/*.hpp ${APP_DIR}/*.h)
 
     set(REMOTE_TARGET ${name}_remote)
     set(USER_REMOTE ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${REMOTE_TARGET}.dir/${name})
     add_library(${REMOTE_TARGET} STATIC ${SOURCE_FILES})
     target_compile_options(${REMOTE_TARGET} PRIVATE "$<$<CONFIG:ALL>:${PLATFORM_CXX_FLAGS}>")
-    target_include_directories(${REMOTE_TARGET} PRIVATE ${PLATFORM_CXX_INCLUDES})
+    target_include_directories(${REMOTE_TARGET} PRIVATE ${APP_DIR} ${PLATFORM_CXX_INCLUDES})
     target_compile_definitions(${REMOTE_TARGET} PRIVATE ${PLATFORM_CXX_DEFS})
     add_dependencies(${name} ${REMOTE_TARGET})
 
