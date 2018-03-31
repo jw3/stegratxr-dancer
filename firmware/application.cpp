@@ -20,11 +20,14 @@
 #include <application.h>
 #include <Sequences.hpp>
 
+#include <vector>
+
 int tinkerDigitalRead(String pin);
 int tinkerDigitalWrite(String command);
 int tinkerAnalogRead(String pin);
 int tinkerAnalogWrite(String command);
 
+const std::vector<uint16_t> pins = {D0, D1, D2};
 
 void setup() {
     pinMode(D0, OUTPUT);
@@ -39,7 +42,7 @@ void setup() {
     Particle.function("analogwrite", tinkerAnalogWrite);
 }
 
-SequencePtr seq = std::make_shared<InlineFour>();
+SequencePtr seq = std::make_shared<InlineFour>(pins);
 
 void loop() {
     seq->step();
