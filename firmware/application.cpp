@@ -30,10 +30,7 @@ int tinkerAnalogWrite(String command);
 const std::vector<uint16_t> pins = {D0, D1, D2};
 
 void setup() {
-    pinMode(D0, OUTPUT);
-    pinMode(D1, OUTPUT);
-    pinMode(D2, OUTPUT);
-    pinMode(D3, OUTPUT);
+    for(auto pin: pins) pinMode(pin, OUTPUT);
     pinMode(D7, OUTPUT);
 
     Particle.function("digitalread", tinkerDigitalRead);
@@ -42,9 +39,15 @@ void setup() {
     Particle.function("analogwrite", tinkerAnalogWrite);
 }
 
+SequencePtr update = nullptr;
 SequencePtr seq = std::make_shared<InlineFour>(pins);
 
 void loop() {
+    if(update) {
+        for(auto pin: pins) digitalWrite(pin, LOW);
+        seq = update;
+        update = nullptr;
+    }
     seq->step();
 }
 
@@ -55,6 +58,17 @@ int tinkerDigitalRead(String pin) {
     if(pinNumber < 0 || pinNumber > 7) return -1;
 
     if(pin.startsWith("D")) {
+        switch(pinNumber) {
+            case 0:
+                update = std::make_shared<FlashD7>();
+                break;
+            case 1:
+                update = std::make_shared<AllUpDown>(pins);
+                break;
+            case 2:
+                update = std::make_shared<InlineFour>(pins);
+                break;
+        }
         return 0;
     }
     else if(pin.startsWith("A")) {

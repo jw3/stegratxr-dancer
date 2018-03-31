@@ -6,6 +6,7 @@
 
 struct FlashD7 : public Sequence
 {
+    FlashD7() {}
     ~FlashD7() override = default;
 
     void step() override {
@@ -18,7 +19,7 @@ struct FlashD7 : public Sequence
 
 struct InlineFour : public Sequence
 {
-    InlineFour(const std::vector<uint16_t>& pins) : pins(pins) {}
+    explicit InlineFour(const std::vector<uint16_t>& pins) : pins(pins) {}
     ~InlineFour() override = default;
 
     void step() override {
@@ -51,7 +52,7 @@ private:
 
 struct AllUpDown : public Sequence
 {
-    AllUpDown(const std::vector<uint16_t>& pins) : pins(pins) {}
+    explicit AllUpDown(const std::vector<uint16_t>& pins) : pins(pins) {}
     ~AllUpDown() override = default;
 
     void step() override {
