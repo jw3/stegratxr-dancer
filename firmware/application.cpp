@@ -27,11 +27,10 @@ int tinkerDigitalWrite(String command);
 int tinkerAnalogRead(String pin);
 int tinkerAnalogWrite(String command);
 
-const std::vector<uint16_t> pins = {D0, D1, D2};
+const std::vector<uint16_t> pins = {D4, D5, D6, D7};
 
 void setup() {
     for(auto pin: pins) pinMode(pin, OUTPUT);
-    pinMode(D7, OUTPUT);
 
     Particle.function("digitalread", tinkerDigitalRead);
     Particle.function("digitalwrite", tinkerDigitalWrite);
@@ -40,7 +39,7 @@ void setup() {
 }
 
 SequencePtr update = nullptr;
-SequencePtr seq = std::make_shared<InlineFour>(pins);
+SequencePtr seq = std::make_shared<AllDown>(pins);
 
 void loop() {
     if(update) {
@@ -60,13 +59,28 @@ int tinkerDigitalRead(String pin) {
     if(pin.startsWith("D")) {
         switch(pinNumber) {
             case 0:
-                update = std::make_shared<FlashD7>();
+                update = std::make_shared<AllDown>(pins);
                 break;
             case 1:
                 update = std::make_shared<AllUpDown>(pins);
                 break;
             case 2:
                 update = std::make_shared<InlineFour>(pins);
+                break;
+            case 3:
+                update = std::make_shared<Randomly>(pins);
+                break;
+            case 4:
+                update = std::make_shared<FlashD7>(D4);
+                break;
+            case 5:
+                update = std::make_shared<FlashD7>(D5);
+                break;
+            case 6:
+                update = std::make_shared<FlashD7>(D6);
+                break;
+            case 7:
+                update = std::make_shared<FlashD7>(D7);
                 break;
         }
         return 0;
@@ -111,7 +125,14 @@ int tinkerAnalogWrite(String command) {
         return 1;
     }
     else if(command.startsWith("A")) {
-        if(seq) seq->delays(value.toInt());
+        switch(pinNumber) {
+            case 3:
+                if(seq) seq->delays(value.toInt());
+                break;
+            case 4:
+                if(seq) seq->difficulty(value.toInt());
+                break;
+        }
         return 1;
     }
     else return -2;
