@@ -25,11 +25,11 @@ private:
    const std::vector<uint16_t>& pins;
 };
 
-struct FlashD7 : public Sequence
+struct FlashIt : public Sequence
 {
-   FlashD7(uint16_t pin) : pin(pin) {
-   }
-   ~FlashD7() override = default;
+   FlashIt() = delete;
+   explicit FlashIt(uint16_t pin) : pin(pin) {}
+   ~FlashIt() override = default;
 
    void step() override {
       digitalWrite(pin, Down);

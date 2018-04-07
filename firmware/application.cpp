@@ -71,16 +71,16 @@ int tinkerDigitalRead(String pin) {
             update = std::make_shared<Randomly>(pins);
             break;
          case 4:
-            update = std::make_shared<FlashD7>(D4);
+            update = std::make_shared<FlashIt>(D4);
             break;
          case 5:
-            update = std::make_shared<FlashD7>(D5);
+            update = std::make_shared<FlashIt>(D5);
             break;
          case 6:
-            update = std::make_shared<FlashD7>(D6);
+            update = std::make_shared<FlashIt>(D6);
             break;
          case 7:
-            update = std::make_shared<FlashD7>(D7);
+            update = std::make_shared<FlashIt>(D7);
             break;
       }
       return 0;
